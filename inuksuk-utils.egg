@@ -1,0 +1,208 @@
+;; inuksuk-utils.egg
+;; CHICKEN Scheme 5.x egg definition file for Hodge-Kleene Inuktitut processor
+;; with NRC spelling normalization integration
+
+(name "inuksuk-utils")
+(version "0.1.0-alpha")
+(author "Development Community")
+(maintainer "inuksuk-utils contributors")
+(license "MIT")
+
+(description
+  "Hodge-Kleene morphological analyzer for Inuktitut with NRC spelling normalization.
+   Provides polysynthetic language processing pipeline combining formal linguistic theory
+   (Hodge decomposition, Kleene algebra) with evidence-based normalization rules from
+   National Research Council Canada.")
+
+(category "language-processing" "natural-language-processing")
+
+;; ============================================================================
+;; SECTION: Project Links & Documentation
+;; ============================================================================
+
+(homepage "https://github.com/[your-org]/inuksuk-utils")
+(repository
+  (git "https://github.com/[your-org]/inuksuk-utils.git"))
+
+;; ============================================================================
+;; SECTION: Core Dependencies
+;; ============================================================================
+;; These are required for the main functionality of inuksuk-utils
+
+(depends
+  ;; CHICKEN Scheme base (implicit, required by all eggs)
+  
+  ;; Text processing and regex
+  irregex                          ; Regular expression engine (for Unicode patterns)
+  
+  ;; Standard library modules
+  srfi-1                           ; List utilities (fold, map, filter, etc.)
+  srfi-13                          ; String utilities (string manipulation, searching)
+  )
+
+;; ============================================================================
+;; SECTION: Test Dependencies
+;; ============================================================================
+;; These are required *only* for running the test suite
+
+(test-depends
+  ;; For test execution and validation
+  test                             ; CHICKEN's built-in test framework
+  
+  ;; For Nunavut Hansard Corpus integration
+  ;; (to be installed when running tests with Salmonella)
+  ;; Note: the corpus data itself (goldstandard-8500.txt) is provided
+  ;; as a test fixture, not via egg dependency
+  )
+
+;; ============================================================================
+;; SECTION: Build & File Configuration
+;; ============================================================================
+
+;; Main implementation files
+(files
+  "inuksuk-utils.scm"              ; Main module (renamed from robust-hodge-kleene-inuktitut.scm)
+  "inuksuk-utils.egg"              ; This egg file
+  "README.md"                      ; User documentation
+  "LICENSE"                        ; MIT license
+  )
+
+;; Test files
+(files
+  "tests/run.scm"                  ; Salmonella test suite
+  "tests/goldstandard-corpus.scm"  ; Goldstandard corpus fixtures
+  )
+
+;; Documentation files (optional, for Salmonella HTML report)
+(files
+  "doc/nrc-normalization-rules.md" ; NRC rule documentation
+  "doc/api-reference.md"           ; API documentation
+  "doc/design-notes.md"            ; Design rationale
+  )
+
+;; ============================================================================
+;; SECTION: Test Suite Configuration
+;; ============================================================================
+
+;; Specify which test file Salmonella should execute
+(tests "tests/run.scm")
+
+;; Salmonella-specific metadata
+;; (These are read by the Salmonella testing framework)
+(test-depends test)
+
+;; ============================================================================
+;; SECTION: Stability & Status Notes
+;; ============================================================================
+
+;; Version scheme: MAJOR.MINOR.PATCH-PHASE
+;; - Version 0.1.0-alpha: PoC stage, API may change
+;; - Phases: -alpha, -beta, -rc, (none for stable)
+
+(synopsis "Hodge-Kleene Inuktitut morphological analyzer with NRC spelling normalization")
+
+;; Categorization for egg repositories
+(tags
+  "language"                       ; Inuktitut language
+  "morphology"                     ; Morphological analysis
+  "nlp"                            ; Natural language processing
+  "polysynthetic"                  ; Polysynthetic language support
+  "formal-linguistics"             ; Formal linguistic methods
+  "inuktitut"                      ; Inuktitut-specific
+  "indigenous-languages"           ; Indigenous language tools
+  "proof-of-concept"               ; Experimental / research stage
+  )
+
+;; ============================================================================
+;; SECTION: Component Modules (if modularizing later)
+;; ============================================================================
+
+;; Currently everything is in inuksuk-utils.scm
+;; Future: could split into:
+;; - inuksuk-utils.normalization    ; Unicode + NRC rules
+;; - inuksuk-utils.hodge            ; Hodge decomposition
+;; - inuksuk-utils.kleene           ; Kleene algebra, suffix generation
+;; - inuksuk-utils.morphtree        ; Morphological tree AST
+;; - inuksuk-utils.logging          ; Error handling & logging
+;;
+;; To be determined based on code growth and reusability needs
+
+;; ============================================================================
+;; SECTION: Implementation Notes for Developers
+;; ============================================================================
+
+;; ARCHITECTURE OVERVIEW:
+;;
+;; This egg provides a single entry point for the Hodge-Kleene pipeline:
+;;
+;;   (inuktitut-analyze text [norm-config] [hodge-config] [resource-limits])
+;;     → returns <hodge-analysis> record
+;;
+;; DESIGN DECISIONS:
+;;
+;; 1. Single-file distribution (for now):
+;;    - Simplifies installation and testing
+;;    - All functionality in inuksuk-utils.scm
+;;    - No inter-egg dependencies beyond SRFI
+;;
+;; 2. NRC Spelling Normalization Integration:
+;;    - Rules from National Research Council Canada (January 2020)
+;;    - https://nrc-digital-repository.canada.ca/
+;;    - Implements Rules 1-5 from normalize-iu-spelling README
+;;    - Conservative approach (only "safe" rules applied)
+;;
+;; 3. Test Strategy:
+;;    - Salmonella integration for automated quality checks
+;;    - Goldstandard corpus fixtures (8,500 sentence pairs from Nunavut Hansard)
+;;    - Metrics: Hodge classification consistency, normalization coverage
+;;    - No dependency on external corpus files (fixtures included in repo)
+;;
+;; 4. Error Handling:
+;;    - Custom <inuktitut-error> record type
+;;    - Configurable logging with levels (debug, info, warning, error, critical)
+;;    - Resource limits to prevent computational explosion (Kleene generation)
+;;
+;; 5. Future Extensibility:
+;;    - FFI hooks for ICU Unicode library (advanced normalization)
+;;    - Machine learning integration (classification layer)
+;;    - Multilingual pipeline support (language-aware branching)
+
+;; STATUS & LIMITATIONS:
+;;
+;; ✓ IMPLEMENTED:
+;;   - Core Hodge-Kleene pipeline
+;;   - Unicode normalization (basic)
+;;   - Morphological tree structure
+;;   - Logging framework
+;;   - Salmonella test integration
+;;
+;; ✗ NOT IMPLEMENTED (Known Limitations):
+;;   - Comprehensive NRC rule application (to be added in v0.2)
+;;   - FFI to external libraries
+;;   - Multilingual co-existence handling
+;;   - Statistical validation of generated forms
+;;   - Performance optimization
+;;   - Full Nunavut Hansard Corpus (currently: goldstandard subset only)
+;;
+;; ROADMAP:
+;;   0.1.0-alpha    → PoC with basic framework (current)
+;;   0.2.0-beta     → NRC rules fully integrated, expanded tests
+;;   0.3.0-rc       → FFI integration, performance optimized
+;;   1.0.0          → Stable release, community review complete
+
+;; ============================================================================
+;; SECTION: Metadata for Documentation Generators
+;; ============================================================================
+
+;; The following fields are used by documentation tools like
+;; salmonella-html-report to generate prettier reports
+
+(documentation
+  "README.md"
+  "doc/api-reference.md"
+  "doc/nrc-normalization-rules.md"
+  )
+
+;; ============================================================================
+;; EOF inuksuk-utils.egg
+;; ============================================================================
