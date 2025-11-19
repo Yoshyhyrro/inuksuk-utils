@@ -4,8 +4,8 @@
 
 (name "inuksuk-utils")
 (version "0.1.0-alpha")
-(author "Development Community")
-(maintainer "inuksuk-utils contributors")
+(author "Yoshihiro Hasegawa")
+(maintainer "Yoshihiro Hasegawa (https://bsky.app/profile/pkpumulo.bsky.social)")
 (license "MIT")
 
 (description
@@ -20,9 +20,9 @@
 ;; SECTION: Project Links & Documentation
 ;; ============================================================================
 
-(homepage "https://github.com/[your-org]/inuksuk-utils")
+(homepage "https://github.com/Yoshyhyrro/inuksuk-utils")
 (repository
-  (git "https://github.com/[your-org]/inuksuk-utils.git"))
+  (git "https://github.com/Yoshyhyrro/inuksuk-utils.git"))
 
 ;; ============================================================================
 ;; SECTION: Core Dependencies
